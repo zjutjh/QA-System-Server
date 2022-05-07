@@ -8,7 +8,7 @@ import (
 )
 
 func GetQuestions(c *gin.Context) {
-	id := c.Param("id")
+	id := c.Query("id")
 	questions, err := questionServices.GetQuestions(id)
 	if err != nil {
 		_ = c.AbortWithError(200, apiExpection.ServerError)
