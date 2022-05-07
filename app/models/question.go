@@ -5,5 +5,5 @@ type Question struct {
 	Stem            string
 	TypeNum         int
 	Options         string
-	answer          string
+	Answer          string
 }
