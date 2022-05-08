@@ -6,6 +6,10 @@ import (
 	"QA-System-Server/app/services/questionServices"
 	"QA-System-Server/app/utils"
 	"github.com/gin-gonic/gin"
+	"math"
+	"sort"
+	"strconv"
+	"strings"
 )
 
 func GetScore(c *gin.Context) {
@@ -17,7 +21,42 @@ func GetScore(c *gin.Context) {
 		return
 	}
 
-	score, err := questionServices.GetScore(scoreForm)
+	var questions []models.Question
+	sum := 0
+
+	questions, err = questionServices.GetQuestions(scoreForm.ID)
+	if err != nil {
+		_ = c.AbortWithError(200, apiExpection.ServerError)
+	}
+
+	sort.SliceStable(scoreForm.Ans, func(i, j int) bool {
+		return scoreForm.Ans[i].ID < scoreForm.Ans[j].ID
+	})
+
+	for i, value := range questions {
+		flag := true
+		answers := strings.Split(value.Answer, ";")
+
+		if len(answers) != len(scoreForm.Ans[i].Key) {
+			continue
+		}
+		for j := 0; j < len(answers) && flag; j++ {
+			key, _ := strconv.Atoi(answers[j])
+			if key != scoreForm.Ans[i].Key[j] {
+				flag = false
+				break
+			}
+		}
+
+		if !flag {
+			continue
+		}
+
+		sum++
+	}
+
+	score := math.Trunc((100.0/float64(len(questions)*sum))*1e2+0.5) * 1e-2
+
 	if err != nil {
 		_ = c.AbortWithError(200, apiExpection.ServerError)
 	} else {
