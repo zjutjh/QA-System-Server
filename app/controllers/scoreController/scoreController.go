@@ -29,6 +29,10 @@ func GetScore(c *gin.Context) {
 		_ = c.AbortWithError(200, apiExpection.ServerError)
 	}
 
+	if len(questions) != len(scoreForm.Ans) {
+		_ = c.AbortWithError(200, apiExpection.ParamError)
+	}
+
 	sort.SliceStable(scoreForm.Ans, func(i, j int) bool {
 		return scoreForm.Ans[i].ID < scoreForm.Ans[j].ID
 	})
@@ -40,6 +44,11 @@ func GetScore(c *gin.Context) {
 		if len(answers) != len(scoreForm.Ans[i].Key) {
 			continue
 		}
+
+		sort.SliceStable(scoreForm.Ans[i].Key, func(i, j int) bool {
+			return scoreForm.Ans[i].Key[i] < scoreForm.Ans[i].Key[j]
+		})
+
 		for j := 0; j < len(answers) && flag; j++ {
 			key, _ := strconv.Atoi(answers[j])
 			if key != scoreForm.Ans[i].Key[j] {
@@ -47,11 +56,9 @@ func GetScore(c *gin.Context) {
 				break
 			}
 		}
-
 		if !flag {
 			continue
 		}
-
 		sum++
 	}
 
