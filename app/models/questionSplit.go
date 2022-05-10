@@ -1,7 +1,7 @@
 package models
 
 type QuestionSplit struct {
-	Stem    string
+	Topic   string
 	TypeNum int
 	Options []string
 }
