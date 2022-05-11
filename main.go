@@ -2,6 +2,7 @@ package main
 
 import (
 	"QA-System-Server/app/midwares"
+	"QA-System-Server/config/config"
 	"QA-System-Server/config/database"
 	"QA-System-Server/config/router"
 	"github.com/gin-contrib/cors"
@@ -20,7 +21,7 @@ func main() {
 
 	router.Init(r)
 
-	err := r.Run()
+	err := r.Run(":" + config.Config.GetString("router.post"))
 	if err != nil {
 		log.Fatal("ServerStartFailed", err)
 	}
