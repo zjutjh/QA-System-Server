@@ -7,7 +7,7 @@
 _roadhog-api-doc
 package.json
 package-lock.json
-config.yaml
+config_example.yaml
 
 # production
 /dist
