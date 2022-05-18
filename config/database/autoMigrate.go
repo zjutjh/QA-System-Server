@@ -8,5 +8,6 @@ import (
 func autoMigrate(db *gorm.DB) error {
 	return db.AutoMigrate(
 		&models.Question{},
-		&models.NameMap{})
+		&models.NameMap{},
+		&models.Submit{})
 }

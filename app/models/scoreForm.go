@@ -1,9 +1,11 @@
 package models
 
 type ScoreForm struct {
-	PaperCode string `json:"paperCode"`
-	AnsList   []struct {
-		ID  int      `json:"id"`
-		Key []string `json:"key"`
-	} `json:"ansList"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	UID  string `json:"uid"`
+	Ans  []struct {
+		ID  int   `json:"id"`
+		Key []int `json:"key"`
+	} `json:"ans"`
 }

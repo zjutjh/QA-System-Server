@@ -2,6 +2,7 @@ package scoreController
 
 import (
 	"QA-System-Server/app/apiExpection"
+	"QA-System-Server/app/controllers/submitController"
 	"QA-System-Server/app/models"
 	"QA-System-Server/app/services/nameServices"
 	"QA-System-Server/app/services/questionServices"
@@ -9,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"math"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -22,36 +24,37 @@ func GetScore(c *gin.Context) {
 		return
 	}
 
-	questions, err := questionServices.GetQuestions(scoreForm.PaperCode)
+	questions, err := questionServices.GetQuestions(scoreForm.ID)
 	if err != nil {
 		_ = c.AbortWithError(200, apiExpection.ServerError)
 	}
 
-	name, err_ := nameServices.GetName(scoreForm.PaperCode)
+	name, err_ := nameServices.GetName(scoreForm.ID)
 	if err_ != nil {
 		_ = c.AbortWithError(200, apiExpection.ServerError)
 	}
 
-	if len(questions) != len(scoreForm.AnsList) {
+	if len(questions) != len(scoreForm.Ans) {
 		_ = c.AbortWithError(200, apiExpection.ParamError)
 	}
-	sort.SliceStable(scoreForm.AnsList, func(i, j int) bool {
-		return scoreForm.AnsList[i].ID < scoreForm.AnsList[j].ID
+	sort.SliceStable(scoreForm.Ans, func(i, j int) bool {
+		return scoreForm.Ans[i].ID < scoreForm.Ans[j].ID
 	})
 	for i, value := range questions {
 		flag := true
 		answers := strings.Split(value.Answer, ";")
 
-		if len(answers) != len(scoreForm.AnsList[i].Key) {
+		if len(answers) != len(scoreForm.Ans[i].Key) {
 			continue
 		}
-		if len(scoreForm.AnsList[i].Key) > 1 {
-			sort.SliceStable(scoreForm.AnsList[i].Key, func(j, k int) bool {
-				return scoreForm.AnsList[i].Key[j] < scoreForm.AnsList[i].Key[k]
+		if len(scoreForm.Ans[i].Key) > 1 {
+			sort.SliceStable(scoreForm.Ans[i].Key, func(j, k int) bool {
+				return scoreForm.Ans[i].Key[j] < scoreForm.Ans[i].Key[k]
 			})
 		}
 		for j := 0; j < len(answers) && flag; j++ {
-			if answers[j] != scoreForm.AnsList[i].Key[j] {
+			answer, _ := strconv.Atoi(answers[j])
+			if answer != scoreForm.Ans[i].Key[j] {
 				flag = false
 				break
 			}
@@ -66,6 +69,10 @@ func GetScore(c *gin.Context) {
 	if err != nil {
 		_ = c.AbortWithError(200, apiExpection.ServerError)
 	} else {
+		err := submitController.SubmitData(scoreForm.ID, scoreForm.Name, scoreForm.UID, strconv.FormatFloat(score, 'f', 2, 64))
+		if err != nil {
+			_ = c.AbortWithError(200, apiExpection.ServerError)
+		}
 		utils.JsonSuccessResponse(c, score, *name)
 	}
 }
