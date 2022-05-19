@@ -6,4 +6,4 @@ database:
   password: "cxcxcx4,"
 
 router:
-  post: 8080
+  post: 8888

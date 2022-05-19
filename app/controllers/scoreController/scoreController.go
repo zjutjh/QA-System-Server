@@ -24,7 +24,8 @@ func GetScore(c *gin.Context) {
 		return
 	}
 
-	questions, err := questionServices.GetQuestions(scoreForm.ID)
+	id, _ := strconv.Atoi(scoreForm.ID)
+	questions, err := questionServices.GetQuestions(id)
 	if err != nil {
 		_ = c.AbortWithError(200, apiExpection.ServerError)
 	}
@@ -70,9 +71,12 @@ func GetScore(c *gin.Context) {
 		_ = c.AbortWithError(200, apiExpection.ServerError)
 	} else {
 		err := submitController.SubmitData(scoreForm.ID, scoreForm.Name, scoreForm.UID, strconv.FormatFloat(score, 'f', 2, 64))
-		if err != nil {
+		if err == apiExpection.ReSubmit {
+			utils.JsonSuccessResponse(c, "请勿重复提交", *name)
+		} else if err != nil {
 			_ = c.AbortWithError(200, apiExpection.ServerError)
+		} else {
+			utils.JsonSuccessResponse(c, score, *name)
 		}
-		utils.JsonSuccessResponse(c, score, *name)
 	}
 }

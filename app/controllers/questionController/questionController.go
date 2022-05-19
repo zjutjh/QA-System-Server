@@ -7,13 +7,15 @@ import (
 	"QA-System-Server/app/services/questionServices"
 	"QA-System-Server/app/utils"
 	"github.com/gin-gonic/gin"
+	"strconv"
 	"strings"
 )
 
 func GetQuestions(c *gin.Context) {
 	id := c.Query("id")
-	println(id)
-	questions, err := questionServices.GetQuestions(id)
+	id_, _ := strconv.Atoi(id)
+
+	questions, err := questionServices.GetQuestions(id_)
 	name, err_ := nameServices.GetName(id)
 
 	questionsSplit := make([]models.QuestionSplit, len(questions))
