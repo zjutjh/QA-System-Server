@@ -14,11 +14,10 @@ func GetName(id string) (*string, error) {
 		ID: id,
 	}).Find(&name)
 	if result.Error != nil {
-		log.Fatal(result.Error)
 		return nil, result.Error
 	}
 	if result.RowsAffected == 0 {
-		log.Fatal(apiExpection.ParamError)
+		log.Println("name_map parameter error")
 		return nil, apiExpection.ParamError
 	}
 	name_ := &name[0].Name

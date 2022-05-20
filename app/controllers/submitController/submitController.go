@@ -8,9 +8,10 @@ import (
 )
 
 func SubmitData(ID, name, UID, score string) error {
+	log.SetFlags(log.Lshortfile | log.Ldate | log.Lmicroseconds)
 	submit, e := submitService.FetchSubmit(UID)
 	if e != nil {
-		log.Fatal(e)
+		log.Println("fetch table submit error")
 		return e
 	}
 	if submit.Name == name {
@@ -23,7 +24,7 @@ func SubmitData(ID, name, UID, score string) error {
 		UID:   UID,
 		Score: score})
 	if err != nil {
-		log.Fatal(err)
+		log.Println("create table submit error")
 		return err
 	}
 	return nil
