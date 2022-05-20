@@ -9,20 +9,34 @@ import (
 
 func SubmitData(ID, name, UID, score string) error {
 	log.SetFlags(log.Lshortfile | log.Ldate | log.Lmicroseconds)
-	submit, e := submitService.FetchSubmit(UID)
+	submit, e := submitService.FetchSubmit(ID, UID)
 	if e != nil {
 		log.Println("fetch table submit error")
 		return e
 	}
 	if submit.Name == name {
-		return apiExpection.ReSubmit
+		if submit.Num > 1 {
+			return apiExpection.ReSubmit
+		}
+		err := submitService.UpdateSubmit(models.Submit{
+			ID:    ID,
+			Name:  name,
+			UID:   UID,
+			Score: score,
+			Num:   2})
+		if err != nil {
+			log.Println("create table submit error")
+			return err
+		}
+		return nil
 	}
 
 	err := submitService.CreateSubmit(models.Submit{
 		ID:    ID,
 		Name:  name,
 		UID:   UID,
-		Score: score})
+		Score: score,
+		Num:   1})
 	if err != nil {
 		log.Println("create table submit error")
 		return err

@@ -10,9 +10,10 @@ import (
 func GetName(id string) (*string, error) {
 	var name []models.NameMap
 
-	result := database.DB.Where(models.NameMap{
-		ID: id,
-	}).Find(&name)
+	result := database.DB.Where(
+		models.NameMap{
+			ID: id,
+		}).Find(&name)
 	if result.Error != nil {
 		return nil, result.Error
 	}

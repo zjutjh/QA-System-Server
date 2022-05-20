@@ -5,4 +5,5 @@ type Submit struct {
 	Name  string
 	UID   string
 	Score string
+	Num   int
 }
