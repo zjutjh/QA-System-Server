@@ -30,7 +30,7 @@ func UpdateSubmit(data models.Submit) error {
 	result := database.DB.Model(models.Submit{}).Where(
 		&models.Submit{
 			PaperID: data.PaperID,
-			Name:    data.Name,
+			UID:     data.UID,
 		}).Updates(&data)
 	if result.Error != nil {
 		return result.Error
