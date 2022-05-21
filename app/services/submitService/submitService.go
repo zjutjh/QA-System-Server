@@ -17,8 +17,8 @@ func FetchSubmit(ID, UID string) (*models.Submit, error) {
 	var submit models.Submit
 	result := database.DB.Where(
 		models.Submit{
-			UID: UID,
-			ID:  ID,
+			UID:     UID,
+			PaperID: ID,
 		}).Find(&submit)
 	if result.Error != nil {
 		return nil, result.Error
@@ -29,8 +29,8 @@ func FetchSubmit(ID, UID string) (*models.Submit, error) {
 func UpdateSubmit(data models.Submit) error {
 	result := database.DB.Model(models.Submit{}).Where(
 		&models.Submit{
-			ID:   data.ID,
-			Name: data.Name,
+			PaperID: data.PaperID,
+			Name:    data.Name,
 		}).Updates(&data)
 	if result.Error != nil {
 		return result.Error

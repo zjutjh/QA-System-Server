@@ -19,11 +19,11 @@ func SubmitData(ID, name, UID, score string) error {
 			return apiExpection.ReSubmit
 		}
 		err := submitService.UpdateSubmit(models.Submit{
-			ID:    ID,
-			Name:  name,
-			UID:   UID,
-			Score: score,
-			Num:   2})
+			PaperID: ID,
+			Name:    name,
+			UID:     UID,
+			Score:   score,
+			Num:     2})
 		if err != nil {
 			log.Println("create table submit error")
 			return err
@@ -32,11 +32,11 @@ func SubmitData(ID, name, UID, score string) error {
 	}
 
 	err := submitService.CreateSubmit(models.Submit{
-		ID:    ID,
-		Name:  name,
-		UID:   UID,
-		Score: score,
-		Num:   1})
+		PaperID: ID,
+		Name:    name,
+		UID:     UID,
+		Score:   score,
+		Num:     1})
 	if err != nil {
 		log.Println("create table submit error")
 		return err
