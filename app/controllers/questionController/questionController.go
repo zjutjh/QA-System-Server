@@ -15,7 +15,9 @@ import (
 func GetQuestions(c *gin.Context) {
 	log.SetFlags(log.Lshortfile | log.Ldate | log.Lmicroseconds)
 	id := c.Query("id")
+	time := c.Query("time")
 	id_, _ := strconv.Atoi(id)
+	time_, _ := strconv.ParseInt(time, 10, 64)
 
 	questions, err := questionServices.GetQuestions(id_)
 	if err != nil {
@@ -23,9 +25,12 @@ func GetQuestions(c *gin.Context) {
 		_ = c.AbortWithError(200, apiExpection.ServerError)
 		return
 	}
-	name, err_ := nameServices.GetName(id)
+	name, err_ := nameServices.GetName(id, time_)
 	if err_ == apiExpection.ParamError {
 		_ = c.AbortWithError(200, err_)
+		return
+	} else if err_ == apiExpection.TimeOut {
+		utils.JsonSuccessResponse(c, "超出试卷作答时间", *name, "EXPIRED")
 		return
 	} else if err_ != nil {
 		log.Println("table name_map error")
@@ -40,5 +45,5 @@ func GetQuestions(c *gin.Context) {
 		questionsSplit[i].Options = strings.Split(value.Options, ";")
 	}
 
-	utils.JsonSuccessResponse(c, questionsSplit, *name)
+	utils.JsonSuccessResponse(c, questionsSplit, *name, "SUCCESS")
 }

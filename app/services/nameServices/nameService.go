@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func GetName(id string) (*string, error) {
+func GetName(id string, time int64) (*string, error) {
 	var name []models.NameMap
 
 	result := database.DB.Where(
@@ -21,6 +21,11 @@ func GetName(id string) (*string, error) {
 		log.Println("name_map parameter error")
 		return nil, apiExpection.ParamError
 	}
+	time_ := &name[0].Time.Time
 	name_ := &name[0].Name
+	if time > time_.Unix() {
+		return name_, apiExpection.TimeOut
+	}
+
 	return name_, nil
 }

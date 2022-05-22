@@ -4,7 +4,6 @@ import (
 	"QA-System-Server/app/apiExpection"
 	"QA-System-Server/app/controllers/submitController"
 	"QA-System-Server/app/models"
-	"QA-System-Server/app/services/nameServices"
 	"QA-System-Server/app/services/questionServices"
 	"QA-System-Server/app/utils"
 	"github.com/gin-gonic/gin"
@@ -31,16 +30,6 @@ func GetScore(c *gin.Context) {
 	questions, err := questionServices.GetQuestions(id)
 	if err != nil {
 		log.Println("table questions error")
-		_ = c.AbortWithError(200, apiExpection.ServerError)
-		return
-	}
-
-	name, err_ := nameServices.GetName(scoreForm.ID)
-	if err_ == apiExpection.ParamError {
-		_ = c.AbortWithError(200, err_)
-		return
-	} else if err_ != nil {
-		log.Println("table name_map error")
 		_ = c.AbortWithError(200, apiExpection.ServerError)
 		return
 	}
@@ -81,11 +70,11 @@ func GetScore(c *gin.Context) {
 
 	e := submitController.SubmitData(scoreForm.ID, scoreForm.Name, scoreForm.UID, strconv.FormatFloat(score, 'f', 2, 64))
 	if e == apiExpection.ReSubmit {
-		utils.JsonSuccessResponse(c, "请勿重复提交", *name)
+		utils.JsonSuccessResponse(c, "请勿重复提交", "", "SUCCESS")
 	} else if e != nil {
 		log.Println("table submit error")
 		_ = c.AbortWithError(200, apiExpection.ServerError)
 	} else {
-		utils.JsonSuccessResponse(c, score, *name)
+		utils.JsonSuccessResponse(c, score, "", "SUCCESS")
 	}
 }
