@@ -6,5 +6,5 @@ import (
 )
 
 func scoreRouterInit(r *gin.RouterGroup) {
-	r.Any("/submit", scoreController.GetScore)
+	r.POST("/submit", scoreController.GetScore)
 }

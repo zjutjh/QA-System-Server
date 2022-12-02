@@ -5,10 +5,9 @@ import (
 	"net/http"
 )
 
-func JsonSuccessResponse(c *gin.Context, data interface{}, id, msg string) {
+func JsonSuccessResponse(c *gin.Context, data interface{}, msg string) {
 	c.JSON(http.StatusOK, gin.H{
 		"msg":  msg,
-		"name": id,
 		"data": data,
 	})
 }

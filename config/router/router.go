@@ -9,7 +9,7 @@ func Init(r *gin.Engine) {
 
 	api := r.Group(pre)
 	{
-		questionRouterInit(api)
+		examRouterInit(api)
 		scoreRouterInit(api)
 	}
 }

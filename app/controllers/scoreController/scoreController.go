@@ -14,22 +14,31 @@ import (
 	"strings"
 )
 
+// GetScore
+//
+//	@Description: 提交答案获取分数的Controller
+//	@param c gin.Context
 func GetScore(c *gin.Context) {
 	log.SetFlags(log.Lshortfile | log.Ldate | log.Lmicroseconds)
-	var scoreForm models.ScoreForm
+	var scoreForm models.SubmitForm
 	sum := 0
 
 	err := c.ShouldBindJSON(&scoreForm)
 	if err != nil {
-		log.Println("request parameter error")
+		log.Println("request form error")
 		_ = c.AbortWithError(200, apiExpection.ParamError)
 		return
 	}
 
-	id, _ := strconv.Atoi(scoreForm.ID)
+	id, err := strconv.Atoi(scoreForm.ID)
+	if err != nil {
+		log.Println("exam id error")
+		_ = c.AbortWithError(200, apiExpection.ParamError)
+		return
+	}
 	questions, err := questionServices.GetQuestions(id)
 	if err != nil {
-		log.Println("table questions error")
+		log.Println("questions table error")
 		_ = c.AbortWithError(200, apiExpection.ServerError)
 		return
 	}
@@ -68,13 +77,16 @@ func GetScore(c *gin.Context) {
 	}
 	score := math.Round(((100.0/float64(len(questions)))*float64(sum))*1e2+0.5) * 1e-2
 
-	e := submitController.SubmitData(scoreForm.ID, scoreForm.Name, scoreForm.UID, strconv.FormatFloat(score, 'f', 2, 64))
+	e := submitController.SubmitData(scoreForm.ID,
+		scoreForm.Name,
+		scoreForm.UID,
+		strconv.FormatFloat(score, 'f', 2, 64))
 	if e == apiExpection.ReSubmit {
-		utils.JsonSuccessResponse(c, "请勿重复提交", "", "SUCCESS")
+		utils.JsonSuccessResponse(c, "请勿重复提交", "SUCCESS")
 	} else if e != nil {
-		log.Println("table submit error")
+		log.Println("submit table error")
 		_ = c.AbortWithError(200, apiExpection.ServerError)
 	} else {
-		utils.JsonSuccessResponse(c, score, "", "SUCCESS")
+		utils.JsonSuccessResponse(c, score, "SUCCESS")
 	}
 }

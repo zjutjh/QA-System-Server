@@ -1,6 +1,6 @@
 module QA-System-Server
 
-go 1.18
+go 1.19
 
 require (
 	github.com/gin-contrib/cors v1.3.1
