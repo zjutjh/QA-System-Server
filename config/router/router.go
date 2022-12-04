@@ -10,6 +10,5 @@ func Init(r *gin.Engine) {
 	api := r.Group(pre)
 	{
 		examRouterInit(api)
-		scoreRouterInit(api)
 	}
 }
