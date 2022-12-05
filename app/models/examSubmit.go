@@ -1,9 +1,9 @@
 package models
 
-// Submit
+// ExamSubmit
 //
 //	@Description: 提交的数据模型
-type Submit struct {
+type ExamSubmit struct {
 	// 试卷ID
 	PaperID string
 	// 作答人姓名

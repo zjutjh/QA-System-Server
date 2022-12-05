@@ -4,7 +4,7 @@ package models
 //
 //	@Description: 试卷题目模型
 type Question struct {
-	// 试卷 ExamID
+	// 试卷 ID
 	ExamId int
 	// 题干
 	Topic string

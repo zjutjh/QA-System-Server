@@ -1,13 +1,12 @@
 package router
 
 import (
-	"QA-System-Server/app/controllers/examController"
-	"QA-System-Server/app/controllers/scoreController"
+	"QA-System-Server/app/controllers/voteController"
 	"github.com/gin-gonic/gin"
 )
 
 func voteRouterInit(r *gin.RouterGroup) {
-	r.GET("/getVoteList", examController.GetExam)
-	r.POST("/submitVote", scoreController.GetScore)
-	//TODO impl tow controllers
+	r.GET("/getVoteList", voteController.GetVoteList)
+	r.POST("/submitVote", voteController.SubmitVote)
+	//TODO impl two controllers
 }
